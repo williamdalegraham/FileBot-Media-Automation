@@ -1,12 +1,15 @@
 [CmdletBinding()]
 param(
-    [string]$ConfigPath = (Join-Path $PSScriptRoot 'config.json'),
+    [string]$ConfigPath,
     [switch]$Once,
     [switch]$DryRun
 )
 
 $ErrorActionPreference = 'Stop'
 $script:Root = $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($ConfigPath)) {
+    $ConfigPath = Join-Path $script:Root 'config.json'
+}
 $script:LogDir = Join-Path $script:Root 'logs'
 $script:StateDir = Join-Path $script:Root 'state'
 $script:StatePath = Join-Path $script:StateDir 'state.json'
@@ -20,7 +23,14 @@ function Write-Log([string]$Message, [ValidateSet('INFO','WARN','ERROR')] [strin
 
 function Read-State {
     if (Test-Path -LiteralPath $script:StatePath) {
-        try { return (Get-Content -Raw -LiteralPath $script:StatePath | ConvertFrom-Json -AsHashtable) }
+        try {
+            $raw = Get-Content -Raw -LiteralPath $script:StatePath | ConvertFrom-Json
+            $items = @{}
+            if ($null -ne $raw.Items) {
+                foreach ($property in $raw.Items.PSObject.Properties) { $items[$property.Name] = $property.Value }
+            }
+            return @{ Items = $items }
+        }
         catch { Write-Log "State file was unreadable; starting with empty state: $_" WARN }
     }
     return @{ Items = @{} }
@@ -166,4 +176,5 @@ do {
     Save-State $state
     if (-not $Once) { Start-Sleep -Seconds ([int]$config.ScanIntervalSeconds) }
 } while (-not $Once)
+
 
