@@ -1,0 +1,23 @@
+{
+  "WatchFolder": "I:\\Pending Processing",
+  "MovieDestination": "I:\\Movies",
+  "TvDestination": "I:\\TV Shows",
+  "ReviewDestination": "I:\\Needs Review",
+  "FileBotPath": "filebot",
+  "InvocationMode": "ExplicitCli",
+  "MoviePresetName": "Organize Movies for Plex",
+  "TvPresetName": "Organize Episodes for Plex",
+  "PlexFormat": "{plex}",
+  "Action": "move",
+  "ConflictPolicy": "skip",
+  "NonStrict": false,
+  "ScanIntervalSeconds": 20,
+  "StableChecksRequired": 3,
+  "MinimumAgeSeconds": 60,
+  "MaxRetries": 3,
+  "RetryDelayMinutes": 15,
+  "MoveUnknownToReview": true,
+  "MinimumVideoBytes": 52428800,
+  "VideoExtensions": [".mkv", ".mp4", ".avi", ".m4v", ".mov", ".wmv", ".ts", ".m2ts", ".mpg", ".mpeg", ".webm"],
+  "IgnoreExtensions": [".part", ".partial", ".tmp", ".crdownload", ".download", ".torrent"]
+}
