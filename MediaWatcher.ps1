@@ -27,7 +27,11 @@ function Read-State {
             $raw = Get-Content -Raw -LiteralPath $script:StatePath | ConvertFrom-Json
             $items = @{}
             if ($null -ne $raw.Items) {
-                foreach ($property in $raw.Items.PSObject.Properties) { $items[$property.Name] = $property.Value }
+                foreach ($property in $raw.Items.PSObject.Properties) {
+                    $entry = @{}
+                    foreach ($field in $property.Value.PSObject.Properties) { $entry[$field.Name] = $field.Value }
+                    $items[$property.Name] = $entry
+                }
             }
             return @{ Items = $items }
         }
